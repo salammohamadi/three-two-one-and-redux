@@ -1,13 +1,20 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { clearCart } from '../features/cart/cartSlice';
+import { useEffect } from 'react';
+
+import { calculateTotal, clearCart } from '../features/cart/cartSlice';
 
 import CartItem from './CartItem';
+import { openModal } from '../features/modal/modalSlice';
 
 const CartContainer = () => {
   const dispatch = useDispatch();
   const { cartItems, total, amount } = useSelector(state => state.cart);
+
+  useEffect(() => {
+    dispatch(calculateTotal());
+  }, [cartItems]);
 
   if (amount < 1) {
     return (
@@ -21,7 +28,7 @@ const CartContainer = () => {
   }
 
   const clearCartClickHandler = () => {
-    dispatch(clearCart());
+    dispatch(openModal());
   };
 
   return (
@@ -38,7 +45,7 @@ const CartContainer = () => {
         <hr />
         <div className='cart-total'>
           <h4>
-            total <span>${total}</span>
+            total <span>${total.toFixed(2)}</span>
           </h4>
         </div>
       </footer>
